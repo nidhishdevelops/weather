@@ -1,0 +1,200 @@
+<html>
+    <head>
+        <title>Weather App</title>
+       <style>
+        *{
+    margin: 0;
+    padding: 0;
+    font-family: 'Times New Roman', Times, serif;
+    box-sizing: border-box;
+}
+body{
+    background-image: url("https://images.pexels.com/photos/5745761/pexels-photo-5745761.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
+    );
+}
+.hi{
+    width: 90%;
+    max-width: 470px;
+    background:linear-gradient(110deg,lightblue,#00B5E2,lightblue);
+    color: aquamarine;
+    margin: 100px auto 0;
+    border-radius: 20px;
+    padding: 40px 35px;
+    text-align: center;
+}
+.find{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.find input{
+    border: 0px;
+    outline: 0px;
+    background-color: aliceblue;
+    color: darkcyan;
+    padding: 10px 25px;
+    height: 60px;
+    border-radius: 30px;
+    flex: 1;
+    margin-right: 16px;
+    font-size: 18px;
+
+}
+
+.find button{
+border: 0;
+outline: 0;
+background-color: aliceblue;
+border-radius: 50%;
+width: 60px;
+height: 60px;
+cursor: pointer;
+
+}
+.find button img{
+    width: 16px;
+}
+.icon{
+    width: 170px;
+    margin-top: 30px;
+
+}
+.weather h1{
+    font-size: 80px;
+    font-weight: 500;
+}
+.weather h2{
+    font-size: 45px;
+    font-weight: 400;
+    margin-top: -10px;
+}
+.details{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0px 20px;
+    margin-top: 50px;
+
+}
+.col{
+    display: flex;
+    align-items: center;
+    text-align: left;
+}
+.col img{
+    width: 40px;
+    margin-right: 10px;
+}
+.humidity{
+    font-size: 28px;
+    margin-top: -6px;
+}
+.wind{
+    font-size: 28px;
+    margin-top: -6px;
+}
+.weather{
+    display: none;
+}
+.error{
+    text-align: left;
+    margin-left: 10px;
+    font-size: 20px;
+    margin-top: 10px;
+    color: black;
+    display: none;
+}
+#foot{
+    left: 0;
+    bottom: 0;
+    position: fixed;
+    font-weight: bolder;
+    font-family: 'Times New Roman', Times, serif;
+    font-style: oblique;
+    width: 100%;
+    text-align: right;
+    font-size: x-large;
+    color:black;
+}
+       </style>
+
+    </head>
+    <body>
+        <div class="hi">
+           <div class="find">
+            <input type="text" placeholder="Enter City Name" spellcheck="false">
+            <button><img src="https://cdn-icons-png.flaticon.com/512/751/751381.png"></button>
+           </div>
+           <div class="error"><p>Invalid City</p></div>
+           <div class="weather">
+            <img src="https://cdn-icons-png.flaticon.com/512/3351/3351979.png" class="icon">
+            <h1 class="temp">22°C</h1>
+            <h2 class="city">New York</h2>
+            <div class="details"> 
+                <div class="col">
+                    <img src="https://cdn-icons-png.flaticon.com/512/8923/8923689.png">
+                    <div><p class=humidity>50%</p>
+                    <p>Humidity</p>
+                </div>
+                </div>
+                <div class="col">
+                    <img src="https://cdn-icons-png.flaticon.com/512/1585/1585400.png">
+                    <div><p class=wind>15 km/h</p>
+                    <p>Wind Speed</p>
+                </div>
+                     
+                </div> 
+            </div>
+        
+           </div>
+        </div>
+        <h1 id="foot">Developed by : Nidhish Sonavale
+        </h1><br><br>
+<script>
+    const apiKey="f8356e868eec0f6ebd845dffc6761ec4";
+    const apiUrl="https://api.openweathermap.org/data/2.5/weather?units=metric&q=";
+    const searchbox= document.querySelector(".find input");
+    const searchbtn= document.querySelector(".find button");
+    const weathericon=document.querySelector(".icon");
+    async function checkWeather(city){
+        const response=await fetch(apiUrl + city +`&appid=${apiKey}`);
+        if(response.status == 404){
+            document.querySelector(".error").style.display="block";
+            document.querySelector(".weather").style.display="none";
+        }else{
+            var data=await response.json();
+       
+       document.querySelector(".city").innerHTML= data.name;
+       document.querySelector(".temp").innerHTML= Math.round(data.main.temp) + "°C";
+       document.querySelector(".humidity").innerHTML= data.main.humidity + "%";
+       document.querySelector(".wind").innerHTML= data.wind.speed + "km/h" ;
+       if(data.weather[0].main=="Clear"){
+           weathericon.src="https://cdn-icons-png.flaticon.com/512/6581/6581490.png";
+       }
+       else if(data.weather[0].main=="Clouds"){
+           weathericon.src = "https://cdn-icons-png.flaticon.com/512/414/414825.png";
+       }
+       else if(data.weather[0].main=="Rain"){
+           weathericon.src = "https://cdn-icons-png.flaticon.com/512/3351/3351979.png";
+       }
+       else if(data.weather[0].main=="Drizzle"){
+           weathericon.src = "https://cdn-icons-png.flaticon.com/512/3076/3076129.png";
+       }
+       else if(data.weather[0].main=="Mist"){
+           weathericon.src = "https://cdn-icons-png.flaticon.com/512/4151/4151022.png";
+       }
+       else if(data.weather[0].main=="Snow"){
+           weathericon.src = "https://cdn-icons-png.flaticon.com/512/2315/2315377.png";
+       }
+       document.querySelector(".weather").style.display= "block";
+       document.querySelector(".error").style.display="none";
+        }
+       
+
+    }
+    searchbtn.addEventListener("click",()=>{
+    checkWeather(searchbox.value);}) 
+</script>
+    </body>
+</html>
